@@ -5,8 +5,8 @@
 ## Installation
 
 ```sh
-yarn add -D postcss-licensing
-postcss -u postcss-licensing -o dist/index.css src/index.css
+yarn add -D postcss-rgb-mapping
+postcss -u postcss-rgb-mapping -o dist/index.css src/index.css
 ```
 
 ## Usage
