@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "postcss-rgb-mapping",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Remaps rgb(a) values to an rgb postfixed variable",
   "license": "Apache-2.0",
   "author": "Cassondra Roberts <castastrophe@users.noreply.github.com> (https://allons-y.llc)",
@@ -45,7 +45,6 @@
     "node": ">=14 <=18"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com",
     "access": "public"
   },
   "lint-staged": {
