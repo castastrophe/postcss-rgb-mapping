@@ -19,32 +19,43 @@
  * @returns {import('postcss').Plugin}
  */
 module.exports = () => {
+    const valueParser = require('postcss-value-parser');
+
     return {
         postcssPlugin: 'postcss-rgb-mapping',
         /** @type {import('postcss').DeclarationProcessor} */
-        DeclarationExit(decl, { css }) {
+        Declaration(decl, { Warning }) {
             const { prop, value } = decl;
-            /*
-             * If the property is not a custom prop, or
-             * if the property is a custom prop and ends with 'rgb', or
-             * if the value is not an rgb or rgba value, or
-             * if the value is an rgba value with a var() function
-             * then return without processing.
-             */
-            if (
-                !prop.startsWith('--') ||
-                prop.endsWith('rgb') ||
-                !value.startsWith('rgb') ||
-                value.includes('rgba(var(')
-            ) return;
 
-            /* Grep out the r, g, b, and a values from the value */
-            const [,r,g,b,a] = value?.match(/rgba?\(([0-9]+), ?([0-9]+), ?([0-9]+)(?:, ?([0-1]|0\.[0-9]+))?\)/);
+            /* Determine if this property is a custom property */
+            const isCustomProp = prop.startsWith('--');
+            /* Determine if this property has already been processed */
+            const isProcessed = prop.endsWith('rgb') || prop.endsWith('opacity');
+
+            /* Parse the value for it's parts */
+            const parsedValue = valueParser(value) || [];
+            /* Determine if the value has an rgb or rgba value */
+            const hasRGBValue = parsedValue.nodes.length ? parsedValue.nodes.some((node) => node.type === 'function' && (['rgb', 'rgba'].some(func => node.value === func))) : false;
+
+            /*
+            * If the property is not a custom prop, or
+            * if the property is a custom prop and ends with 'rgb', or
+            * if the value is not an rgb or rgba value, or
+            * if the value is an rgba value with a var() function
+            * then return without processing.
+            */
+            if (!isCustomProp || isProcessed || !hasRGBValue || parsedValue.nodes.length === 0) return;
+
+            const rgba = parsedValue.nodes.find((node) => node.type === 'function' && (['rgb', 'rgba'].some(func => node.value === func)));
+
+            const [r,g,b,a] = rgba.nodes.reduce((acc, node) => {
+                if (node.type === 'word' && node.value) acc.push(node.value);
+                return acc;
+            }, []);
 
             /* If any of the values are undefined, return without processing */
             if (!r || !g || !b) {
-                css.warn(`Unable to parse out rgb values: ${value}`, { node: decl });
-                return;
+                return new Warning(`Unable to parse out rgb values: ${value}`, { node: decl });
             }
 
             /* Create a new declaration with the rgb values separated out */

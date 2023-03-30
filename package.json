@@ -1,7 +1,7 @@
 {
   "private": false,
   "name": "postcss-rgb-mapping",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Remaps rgb(a) values to an rgb postfixed variable",
   "license": "Apache-2.0",
   "author": "Cassondra Roberts <castastrophe@users.noreply.github.com> (https://allons-y.llc)",
@@ -17,21 +17,38 @@
     "index.js"
   ],
   "scripts": {
+    "coverage": "c8 yarn test",
+    "prepare": "husky install",
+    "semantic-release": "semantic-release",
     "test": "ava"
   },
   "peerDependencies": {
     "postcss": "^7.0.0 || ^8.0.0"
   },
+  "dependencies": {
+    "postcss-value-parser": "^4.2.0"
+  },
   "devDependencies": {
+    "@commitlint/cli": "^17.5.1",
+    "@commitlint/config-conventional": "^17.4.4",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^9.0.2",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^8.0.7",
+    "@semantic-release/npm": "^10.0.2",
+    "@semantic-release/release-notes-generator": "^10.0.3",
     "ava": "^5.2.0",
+    "c8": "^7.13.0",
+    "husky": "^8.0.3",
     "lint-staged": "^13.2.0",
     "postcss": "^8.4.21",
     "prettier": "^2.8.7",
-    "prettier-package-json": "^2.8.0"
+    "prettier-package-json": "^2.8.0",
+    "semantic-release": "^21.0.2"
   },
   "keywords": [
     "css",
-    "licensing",
+    "rgb",
     "plugin",
     "postcss"
   ],
@@ -45,7 +62,8 @@
     "node": ">=14 <=18"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   },
   "lint-staged": {
     "*.js": [
