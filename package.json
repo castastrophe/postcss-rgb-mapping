@@ -20,6 +20,7 @@
     "coverage": "c8 yarn test",
     "prepare": "husky install",
     "semantic-release": "semantic-release",
+    "prepublishOnly": "yarn test",
     "test": "ava"
   },
   "peerDependencies": {
